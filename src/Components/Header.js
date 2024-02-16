@@ -6,12 +6,17 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../Utils/userSlice";
+import {togglGptSearchView} from "../Utils/gptSlice"
 import { LOGO } from "../Utils/constants";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const gptSearchView = useSelector((store) => store.gpt.showGptSearch)
   const user = useSelector((store) => store.user);
+  const handleToggle = () => {
+    dispatch(togglGptSearchView());
+  }
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -52,6 +57,7 @@ const Header = () => {
       />
       {user && (
         <div className="flex p-2">
+          <button className="py-2 px-4 mx-4 my-2 bg-purple-800 text-white rounded-lg" onClick={handleToggle}>{(gptSearchView)?'Movie Search':'GPT Search'}</button>
           <img className="w-12 h-12" alt="usericon" src={user?.photoURL} />
           <button onClick={handleSignOut} className="font-bold text-white ">
             (Sign Out)
